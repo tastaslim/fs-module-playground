@@ -1,9 +1,16 @@
 {
-  "name": "aws-sqs-tutorial",
+  "name": "important",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "aws-sdk": "~2.1.36",
+    "axios": "^0.21.1",
+    "axios-stream": "^1.0.17",
     "express": "~4.12.4",
-    "aws-sdk": "~2.1.36"
+    "fs-extra": "^10.0.0",
+    "googleapis": "^81.0.0",
+    "https": "^1.0.0",
+    "node-downloader-helper": "^1.0.18",
+    "fake-file-generator": "^1.1.1"
   }
 }
