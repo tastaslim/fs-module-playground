@@ -1,8 +1,8 @@
 // Require objects.
-var express  = require('express');
-var app      = express();
-var aws      = require('aws-sdk');
-var queueUrl = "";
+var express = require('express');
+var app = express();
+var aws = require('aws-sdk');
+var queueUrl = "Qeueu Url";
 var receipt  = "";
     
 // Load your AWS credentials and try to instantiate the object.
@@ -114,7 +114,7 @@ app.get('/purge', function (req, res) {
 });
 
 // Start server.
-var server = app.listen(80, function () {
+var server = app.listen(3000, function () {
     var host = server.address().address;
     var port = server.address().port;
 

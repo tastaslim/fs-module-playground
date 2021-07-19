@@ -1,21 +1,18 @@
 'use strict'
 const Fs = require('fs-extra')   
 const axios = require('axios')
-// 4157063925513094414
 async function downloadImage() {
-  const url="https://www.googleapis.com/drive/v3/files/18OsQSt4WUSYqZqcJT1FTkdBUoWcsIKd_?alt=media"
-  // const url = 'https://3d3c95b8-a-96eac429-s-sites.googlegroups.com/feeds/media/content/reallyheaven.info/ambrose47/2430119723369785659'
-  
+  const url="https://lh6.googleusercontent.com/-haCvlJ0Zu-E/W2mXeOnMjoI/AAAAAAAAAAA/Hp5RP-0IB8cuxN5vUMR86fQF5xkYYZ0TACOQCEAE/s100/photo.jpg"
   const headers = {
-    Authorization: `Bearer ya29.a0ARrdaM9Q_YBUCqoduFYwlrWms1PvI89W26L4mPU9J47VwyHLKcxZpKGbyitqX70G2NPjF0rHEsRTx-2qZ8XOuLADBmFjexOOMPMjPoj4UO3f02H1LV-ZbjxjNZrT-jjAN6uINA9W9ICgu-xE0aSuhqTjQ4M4ylTaR6KEu8iIhFglqS6xzOwqvphUaEkwMcRnbvqFbWWrA1I1g48sp8s1Z7LKN1CfOtinX_SxiFMf0hQC5BeW`,
+    Authorization: `Bearer ya29.a0ARrdaM_axcvt-EmUd3d4pwSQTnWidXCwBJqsPIRhfJUzBS6bKaIFseZqg5GHrD_ntbpRKAx2ChI3dqUKuiby8a2qa2rneR5UR3ZW2BPAhbwq1W0IJQqt8RUddiKzEGqQPX4u-3dM44g5z7yJo-saSUzPPPR85inoQh_1r8Ww5Z2IjhH_TCUo7xgzGNSq5yXbAd1xTlR_nj9EW_cgZIIs8svAXoUjInhDlIcHUWS67G16XOHvnfaY8Eya`,
   };
   return await axios.get(url, { headers, responseType: 'stream' });
 }
 
 async function downloadImage1() {
 
-  const writer = Fs.createWriteStream('code2.png')
   const response = await downloadImage();
+  const writer = Fs.createWriteStream('code2.jpg')
   response.data.pipe(writer)
 }
 
