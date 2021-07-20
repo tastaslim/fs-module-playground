@@ -1,26 +1,39 @@
 // Require objects.
-var express = require('express');
-var app = express();
-var aws = require('aws-sdk');
-var queueUrl = "Qeueu Url";
-var receipt  = "";
-    
-// Load your AWS credentials and try to instantiate the object.
-aws.config.loadFromPath(__dirname + '/config.json');
+const express = require('express');
+const app = express();
+const {SQS} = require('aws-sdk');
+const queueUrl = "your queue url";
+const receipt = "your receipt handler";
 
 // Instantiate SQS.
-var sqs = new aws.SQS();
+const sqs = new SQS({region: 'your region'});  // us-east-1
 // Creating a queue.
 app.get('/create', function (req, res) {
-    var params = {
+    const params = {
         QueueName: "MyFirstQueue"
     };
-    
     sqs.createQueue(params, function(err, data) {
         if(err) {
             res.send(err);
         } 
         else {
+            console.log(data);
+            res.send(data);
+        } 
+    });
+});
+// delete Queue
+app.get('/deleteQueue', function (req, res) {
+    const params = {
+        QueueUrl: queueUrl
+    };
+    
+    sqs.deleteQueue(params, function(err, data) {
+        if(err) {
+            res.send(err);
+        } 
+        else {
+            console.log(data);
             res.send(data);
         } 
     });
@@ -33,6 +46,7 @@ app.get('/list', function (req, res) {
             res.send(err);
         } 
         else {
+            console.log(data);
             res.send(data);
         } 
     });
@@ -40,10 +54,12 @@ app.get('/list', function (req, res) {
 
 // Sending a message.
 // NOTE: Here we need to populate the queue url you want to send to.
-// That variable is indicated at the top of app.js.
+// That constable is indicated at the top of app.js.
 app.get('/send', function (req, res) {
-    var params = {
-        MessageBody: 'Hello world!',
+    const params = {
+        MessageBody: JSON.stringify({
+            "message": "Hello World!"
+        }),
         QueueUrl: queueUrl,
         DelaySeconds: 0
     };
@@ -53,10 +69,13 @@ app.get('/send', function (req, res) {
             res.send(err);
         } 
         else {
+            console.log(data);
             res.send(data);
         } 
     });
 });
+
+
 
 // Receive a message.
 // NOTE: This is a great long polling example. You would want to perform
@@ -65,7 +84,7 @@ app.get('/send', function (req, res) {
 // It will then put the message "in flight" and I won't be able to 
 // reach that message again until that visibility timeout is done.
 app.get('/receive', function (req, res) {
-    var params = {
+    const params = {
         QueueUrl: queueUrl,
         VisibilityTimeout: 600 // 10 min wait time for anyone else to process.
     };
@@ -75,6 +94,7 @@ app.get('/receive', function (req, res) {
             res.send(err);
         } 
         else {
+            console.log(data);
             res.send(data);
         } 
     });
@@ -82,7 +102,7 @@ app.get('/receive', function (req, res) {
 
 // Deleting a message.
 app.get('/delete', function (req, res) {
-    var params = {
+    const params = {
         QueueUrl: queueUrl,
         ReceiptHandle: receipt
     };
@@ -92,6 +112,7 @@ app.get('/delete', function (req, res) {
             res.send(err);
         } 
         else {
+            console.log(data);
             res.send(data);
         } 
     });
@@ -99,7 +120,7 @@ app.get('/delete', function (req, res) {
 
 // Purging the entire queue.
 app.get('/purge', function (req, res) {
-    var params = {
+    const params = {
         QueueUrl: queueUrl
     };
     
@@ -108,15 +129,16 @@ app.get('/purge', function (req, res) {
             res.send(err);
         } 
         else {
+            console.log(data);
             res.send(data);
         } 
     });
 });
 
 // Start server.
-var server = app.listen(3000, function () {
-    var host = server.address().address;
-    var port = server.address().port;
+const server = app.listen(3000, function () {
+    const host = server.address().address;
+    const port = server.address().port;
 
     console.log('AWS SQS example app listening at http://%s:%s', host, port);
 });
