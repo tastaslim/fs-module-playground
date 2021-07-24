@@ -10,7 +10,7 @@ function GenerateFolderAndFakeFile(fileSize, fileType, filePath, fileName) {
     console.log('Folder created');
   }
   const options = { type: fileType }
-  FakeFileGenerator.makeFile(filePath + '/' + fileName, fileSize, options);
+  FakeFileGenerator.makeFile(`${filePath}/${fileName}`, fileSize, options);
   console.log('file generated!');
 }
 
@@ -24,22 +24,22 @@ function RemoveFileAndFolder(filePath) {
       ******************** If 1 or more folders/files exist inside directory ****************************
     */
     if (files.length > 0) {
-      files.forEach((filename)=> {
+      files.forEach((fileName)=> {
         /*
          ********************* If it is a directory ****************************
         */
-        if (fs.statSync(filePath + "/" + filename).isDirectory()) {
+        if (fs.statSync(`${filePath}/${fileName}`).isDirectory()) {
           /*
            ******************* Recursive call until all the sub folders are deleted inside a folder ************************
           */
-          RemoveFileAndFolder(filePath + "/" + filename)
+          RemoveFileAndFolder(`${filePath}/${fileName}`)
           console.log('Removed Folder');
         }
         /*
          ********************* If it is a file ****************************
         */
         else {
-          fs.unlinkSync(filePath + "/" + filename)
+          fs.unlinkSync(`${filePath}/${fileName}`)
           console.log('Removed File');
         }
       })
@@ -58,4 +58,4 @@ function RemoveFileAndFolder(filePath) {
 }
 
 // GenerateFolderAndFakeFile(100000, 'txt', 'tas', 'test.txt');
-// RemoveFileAndFolder('tas');
+RemoveFileAndFolder('tas');
