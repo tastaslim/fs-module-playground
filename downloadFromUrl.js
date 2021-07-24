@@ -4,7 +4,7 @@ const axios = require('axios')
 async function downloadImage() {
   const url="your image url"
   const headers = {
-    Authorization: `Bearer your access token`
+    Authorization: `Bearer token`
   };
   return await axios.get(url, { headers, responseType: 'stream' });
 }
@@ -12,7 +12,7 @@ async function downloadImage() {
 async function downloadImage1() {
 
   const response = await downloadImage();
-  const writer = Fs.createWriteStream('code2.jpg')
+  const writer = Fs.createWriteStream('filename with extension')
   response.data.pipe(writer)
 }
 

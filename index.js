@@ -1,144 +1,178 @@
-// Require objects.
-const express = require('express');
-const app = express();
 const {SQS} = require('aws-sdk');
 const queueUrl = "your queue url";
 const receipt = "your receipt handler";
+const {promisify } = require("util");
 
 // Instantiate SQS.
-const sqs = new SQS({region: 'your region'});  // us-east-1
-// Creating a queue.
-app.get('/create', function (req, res) {
-    const params = {
-        QueueName: "MyFirstQueue"
-    };
-    sqs.createQueue(params, function(err, data) {
-        if(err) {
-            res.send(err);
-        } 
-        else {
-            console.log(data);
-            res.send(data);
-        } 
-    });
-});
-// delete Queue
-app.get('/deleteQueue', function (req, res) {
-    const params = {
+const sqs = new SQS({ region: 'us-east-1' });  // us-east-1
+
+/*
+ By default this methods don't support promise. Hence we are using promisify to convert callback functions to 
+ promises.
+*/
+const CreateQueue= promisify(sqs.createQueue).bind(sqs);
+const DeleteQueue= promisify(sqs.deleteQueue).bind(sqs);
+const ListQueues= promisify(sqs.listQueues).bind(sqs);
+const SendMessage= promisify(sqs.sendMessage).bind(sqs);
+const ReceiveMessage= promisify(sqs.receiveMessage).bind(sqs);
+const DeleteMessage= promisify(sqs.deleteMessage).bind(sqs);
+const PurgeQueue= promisify(sqs.purgeQueue).bind(sqs);
+const GetQueue = promisify(sqs.getQueueUrl).bind(sqs);
+
+/* 
+  Create a Queue.
+  const params = {
+    QueueName: "MyFirstQueue"
+};
+*/
+async function createQueue(createQueueParams) {
+    try {
+        const createQueueResponse = await CreateQueue(createQueueParams);
+        console.log(createQueueResponse);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+/* 
+   Delete a Queue
+   const params = {
         QueueUrl: queueUrl
     };
-    
-    sqs.deleteQueue(params, function(err, data) {
-        if(err) {
-            res.send(err);
-        } 
-        else {
-            console.log(data);
-            res.send(data);
-        } 
-    });
-});
+*/
 
-// Listing our queues.
-app.get('/list', function (req, res) {
-    sqs.listQueues(function(err, data) {
-        if(err) {
-            res.send(err);
-        } 
-        else {
-            console.log(data);
-            res.send(data);
-        } 
-    });
-});
+async function deleteQueue(deleteQueueParams) {
+    try {
+        const deleteQueueResponse = await DeleteQueue(deleteQueueParams);
+        console.log(deleteQueueResponse);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
 
-// Sending a message.
-// NOTE: Here we need to populate the queue url you want to send to.
-// That constable is indicated at the top of app.js.
-app.get('/send', function (req, res) {
-    const params = {
+/* 
+   Get a Queue
+   const params = {
+        QueueUrl: queueUrl
+    };
+*/
+
+async function getQueue(getQueueParams) {
+    try {
+        const getQueueResponse = await GetQueue(getQueueParams);
+        console.log(getQueueResponse);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+/* 
+ List Queues. 
+ No body.
+*/
+async function listQueues(listQueuesParams) {
+    try {
+        const listQueuesResponse = await ListQueues();
+        console.log(listQueuesResponse);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+
+/* 
+ Sending a message.
+
+ const params = {
+        //  MessageBody must be in the sting format
         MessageBody: JSON.stringify({
             "message": "Hello World!"
         }),
         QueueUrl: queueUrl,
         DelaySeconds: 0
     };
+*/
 
-    sqs.sendMessage(params, function(err, data) {
-        if(err) {
-            res.send(err);
-        } 
-        else {
-            console.log(data);
-            res.send(data);
-        } 
-    });
-});
-
+async function sendMessage(sendMessageParams) {
+    try {
+        const sendMessageResponse = await SendMessage(sendMessageParams);
+        console.log(sendMessageResponse);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
 
 
-// Receive a message.
-// NOTE: This is a great long polling example. You would want to perform
-// this action on some sort of job server so that you can process these
-// records. In this example I'm just showing you how to make the call.
-// It will then put the message "in flight" and I won't be able to 
-// reach that message again until that visibility timeout is done.
-app.get('/receive', function (req, res) {
-    const params = {
+/*
+ Receive a message.
+
+ NOTE: This is a great long polling example. You would want to perform
+ this action on some sort of job server so that you can process these
+ records. In this example I'm just showing you how to make the call.
+ It will then put the message "in flight" and I won't be able to 
+ reach that message again until that visibility timeout is done.
+
+ const params = {
         QueueUrl: queueUrl,
         VisibilityTimeout: 600 // 10 min wait time for anyone else to process.
     };
-    
-    sqs.receiveMessage(params, function(err, data) {
-        if(err) {
-            res.send(err);
-        } 
-        else {
-            console.log(data);
-            res.send(data);
-        } 
-    });
-});
+*/
+async function receiveMessage(receiveMessageParams) {
+    try {
+        const receiveMessageResponse = await ReceiveMessage(receiveMessageParams);
+        console.log(receiveMessageResponse);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
 
-// Deleting a message.
-app.get('/delete', function (req, res) {
-    const params = {
-        QueueUrl: queueUrl,
-        ReceiptHandle: receipt
-    };
-    
-    sqs.deleteMessage(params, function(err, data) {
-        if(err) {
-            res.send(err);
-        } 
-        else {
-            console.log(data);
-            res.send(data);
-        } 
-    });
-});
+/* 
+ Delete a message.
+  const params = {
+    QueueUrl: queueUrl,
+    ReceiptHandle: receipt
+  };
+*/
+async function deleteMessage(deleteMessageParams) {
+    try {
+        const deleteMessageResponse = await DeleteMessage(deleteMessageParams);
+        console.log(deleteMessageResponse);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
 
-// Purging the entire queue.
-app.get('/purge', function (req, res) {
-    const params = {
+/* 
+ Purging the entire queue.
+ const params = {
         QueueUrl: queueUrl
-    };
-    
-    sqs.purgeQueue(params, function(err, data) {
-        if(err) {
-            res.send(err);
-        } 
-        else {
-            console.log(data);
-            res.send(data);
-        } 
-    });
-});
+ };
+*/
+async function purgeQueue(purgeQueueParams) {
+     try {
+        const purgeQueueResponse = await PurgeQueue(purgeQueueParams);
+        console.log(purgeQueueResponse);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
 
-// Start server.
-const server = app.listen(3000, function () {
-    const host = server.address().address;
-    const port = server.address().port;
+const params = {
+    QueueUrl: queueUrl,
+    // ReceiptHandle: receipt
+    // QueueName: "MyQueue",
+    // MessageBody: JSON.stringify({
+    //    "message": "Hello World!"
+    // }),
+    // DelaySeconds: 0,
+    // VisibilityTimeout: 600 // 10 min wait time for anyone else to process.
+}
+// deleteQueue(params);
+// createQueue(params)
+// listQueues(params);
+// getQueue(params);
+// sendMessage(params);
+// receiveMessage(params);
+// deleteMessage(params);
+// purgeQueue(params);
 
-    console.log('AWS SQS example app listening at http://%s:%s', host, port);
-});
