@@ -4,7 +4,7 @@ const receipt = "your receipt handler";
 const {promisify } = require("util");
 
 // Instantiate SQS.
-const sqs = new SQS({ region: 'us-east-1' });  // us-east-1
+const sqs = new SQS({ region: 'your region' });  // us-east-1
 
 /*
  By default this methods don't support promise. Hence we are using promisify to convert callback functions to 
