@@ -1,16 +1,22 @@
-const fs = require("fs-extra")
-const FakeFileGenerator = require('fake-file-generator');
+import { existsSync, mkdirSync, readdirSync, statSync, unlinkSync, rmdirSync } from "fs-extra";
+import { makeFile } from 'fake-file-generator';
 
 /*
  ***************************************** Generate Fake file and folder *******************************
 */
 function GenerateFolderAndFakeFile(fileSize, fileType, filePath, fileName) {
-  if (!fs.existsSync(filePath)) {
-    fs.mkdirSync(filePath);
+  /*
+   ***************** Creates folder if it does not exists ************************
+  */
+  if (!existsSync(filePath)) {
+    mkdirSync(filePath);
     console.log('Folder created');
   }
   const options = { type: fileType }
-  FakeFileGenerator.makeFile(`${filePath}/${fileName}`, fileSize, options);
+  /* 
+   ***************************** Creates Fake File *****************************
+  */
+  makeFile(`${filePath}/${fileName}`, fileSize, options);
   console.log('file generated!');
 }
 
@@ -18,8 +24,8 @@ function RemoveFileAndFolder(filePath) {
   /*
    ************************************** Remove File and Folder *******************************************                   
   */
-  if (fs.existsSync(filePath)) {
-    const files = fs.readdirSync(filePath)
+  if (existsSync(filePath)) {
+    const files = readdirSync(filePath)
     /*
       ******************** If 1 or more folders/files exist inside directory ****************************
     */
@@ -28,25 +34,26 @@ function RemoveFileAndFolder(filePath) {
         /*
          ********************* If it is a directory ****************************
         */
-        if (fs.statSync(`${filePath}/${fileName}`).isDirectory()) {
+        if (statSync(`${filePath}/${fileName}`).isDirectory()) {
           /*
            ******************* Recursive call until all the sub folders are deleted inside a folder ************************
           */
           RemoveFileAndFolder(`${filePath}/${fileName}`)
-          console.log('Removed Folder');
+          console.log('Removed File and Folders of Sub Folder');
         }
         /*
          ********************* If it is a file ****************************
         */
         else {
-          fs.unlinkSync(`${filePath}/${fileName}`)
+          unlinkSync(`${filePath}/${fileName}`)
           console.log('Removed File');
         }
       })
-      fs.rmdirSync(filePath);
+      rmdirSync(filePath);
       console.log('Removed Folder');
     } else {
-      fs.rmdirSync(filePath);
+      rmdirSync(filePath);
+      console.log('Removed Root Folder');
     }
   }
    /*
@@ -58,4 +65,4 @@ function RemoveFileAndFolder(filePath) {
 }
 
 // GenerateFolderAndFakeFile(100000, 'txt', 'tas', 'test.txt');
-RemoveFileAndFolder('tas');
+// RemoveFileAndFolder('tas');

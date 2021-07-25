@@ -1,7 +1,7 @@
-const {SQS} = require('aws-sdk');
+import { SQS } from 'aws-sdk';
 const queueUrl = "your queue url";
 const receipt = "your receipt handler";
-const {promisify } = require("util");
+import { promisify } from "util";
 
 // Instantiate SQS.
 const sqs = new SQS({ region: 'your region' });  // us-east-1

@@ -2,6 +2,12 @@
   "name": "important",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "start:app": "nodemon --exec babel-node ./src/app.js",
+    "start:index": "nodemon --exec babel-node ./src/index.js",
+    "start:zip": "nodemon --exec babel-node ./src/zipUnzipFileFolder.js",
+    "start:download": "nodemon --exec babel-node ./src/downloadFromUrl.js"
+  },
   "dependencies": {
     "adm-zip": "^0.5.5",
     "aws-sdk": "~2.1.36",
@@ -9,6 +15,14 @@
     "axios-stream": "^1.0.17",
     "fake-file-generator": "^1.1.1",
     "fs-extra": "^10.0.0",
-    "node-downloader-helper": "^1.0.18"
+    "node-downloader-helper": "^1.0.18",
+    "stream": "0.0.2",
+    "zlib": "^1.0.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.14.8",
+    "@babel/node": "^7.14.7",
+    "@babel/preset-env": "^7.14.8"
   }
 }
