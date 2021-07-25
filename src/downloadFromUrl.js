@@ -29,8 +29,8 @@ async function downloadImageWrongWayButMostPeopleUseItWithoutKnowledge(url, file
 */
 async function downloadImage(url, fileName) {
   const headers = {
-    Authorization: `Bearer ya29.a0ARrdaM8gBXdOZHkEBFFP7PcVKDST_dljn0OWZ26_OmpAciauiu1064im25uHJb0tQx65_UPaZPA9hGk9Q2YrS-eJ8QljAAE0prfXC9f7UtQfpf49XHwEm_JuMbeUC9yuOmL8hQlEeN9ZzgRfczCTzX1PCpuPwqc`,
-    "Content-Type":"application/vnd.google-apps.file"
+    Authorization: `Bearer token`,
+    "Content-Type":"content type"
   };
   /* 
    ************************** Read Stream ******************************
@@ -55,4 +55,4 @@ async function downloadImage(url, fileName) {
 
 // const url = "https://media0.giphy.com/media/4SS0kfzRqfBf2/giphy.gif";
 
-downloadImage("https://www.googleapis.com/drive/v3/files/125PLCCFhZRsh8u0vu_IfPLZ-zdGkA2lC?alt=media","download.png")
+downloadImage("url","filename")
